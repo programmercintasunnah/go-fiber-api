@@ -1,10 +1,10 @@
 package models
 
 type User struct {
-	ID           uint   `gorm:"primaryKey"`
-	Username     string `gorm:"unique;not null"`
-	Email        string `gorm:"unique;not null"`
-	Password     string `gorm:"not null" json:"-"`
-	FailedLogins int    `gorm:"not null;default:0"`
-	LockedUntil  int64  `gorm:"not null;default:0"`
+	ID           uint   `json:"id"`
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	Password     string `json:"-"` // Jangan kirim password dalam JSON response
+	FailedLogins int    `json:"failed_logins"`
+	LockedUntil  int64  `json:"locked_until"`
 }

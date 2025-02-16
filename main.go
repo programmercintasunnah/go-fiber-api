@@ -15,8 +15,7 @@ package main
 // │   ├── limiter.go
 
 import (
-	"go-fiber-api/database"
-	"go-fiber-api/models"
+	database "go-fiber-api/db"
 	"go-fiber-api/routes"
 
 	"log"
@@ -35,11 +34,11 @@ func main() {
 
 	// Connect database
 	database.ConnectDB()
-	database.DB.AutoMigrate(
-		&models.User{},
-		&models.Book{},
-		&models.Iktikaf{},
-	)
+	// database.DB.AutoMigrate( // hapus, karna sudah pake dbmate
+	// 	&models.User{},
+	// 	&models.Book{},
+	// 	&models.Iktikaf{},
+	// )
 
 	// Register Routes
 	routes.AuthRoutes(app)

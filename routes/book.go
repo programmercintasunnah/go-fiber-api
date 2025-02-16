@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-fiber-api/database"
+	database "go-fiber-api/db"
 	"go-fiber-api/middleware"
 	"go-fiber-api/models"
 
