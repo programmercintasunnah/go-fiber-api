@@ -20,8 +20,11 @@ func AuthRoutes(app *fiber.App) {
 			return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
 		}
 
-		// Hash password
-		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if len(user.Password) < 8 {
+			return c.Status(400).JSON(fiber.Map{"error": "Password harus minimal 8 karakter"})
+		}
+
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 		user.Password = string(hashedPassword)
 
 		database.DB.Create(&user)
@@ -43,9 +46,6 @@ func AuthRoutes(app *fiber.App) {
 		if user.ID == 0 {
 			return c.Status(400).JSON(fiber.Map{"error": "User not found"})
 		}
-
-		fmt.Println("LockedUntil:", user.LockedUntil)
-		fmt.Println("Current Time:", time.Now().Unix())
 
 		if user.LockedUntil != 0 && user.LockedUntil > time.Now().Unix() {
 			return c.Status(403).JSON(fiber.Map{"error": "Akun dikunci, coba lagi nanti"})

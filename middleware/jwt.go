@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -23,7 +25,20 @@ func AuthRequired(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Missing token"})
 	}
 
+	// Pastikan token selalu menggunakan "Bearer "
+	if !strings.HasPrefix(tokenString, "Bearer ") {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid token format"})
+	}
+
+	// Ambil token setelah "Bearer "
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
+	// Parse token
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Pastikan algoritma yang digunakan benar
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 
