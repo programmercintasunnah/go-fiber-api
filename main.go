@@ -38,12 +38,14 @@ func main() {
 	database.DB.AutoMigrate(
 		&models.User{},
 		&models.Book{},
+		&models.Iktikaf{},
 	)
 
 	// Register Routes
 	routes.AuthRoutes(app)
 	routes.UserRoutes(app)
 	routes.BookRoutes(app)
+	routes.IktikafRoutes(app)
 
 	// Start server
 	app.Listen(":3000")
