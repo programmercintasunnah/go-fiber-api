@@ -21,6 +21,8 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 )
 
@@ -31,6 +33,10 @@ func main() {
 	}
 
 	app := fiber.New()
+
+	// Middleware untuk CORS & Recover
+	app.Use(cors.New())    // Izinkan akses API dari domain berbeda
+	app.Use(recover.New()) // Tangani panic agar server tidak crash
 
 	// Connect database
 	database.ConnectDB()
