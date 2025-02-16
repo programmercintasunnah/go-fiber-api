@@ -35,11 +35,15 @@ func main() {
 
 	// Connect database
 	database.ConnectDB()
-	database.DB.AutoMigrate(&models.User{})
+	database.DB.AutoMigrate(
+		&models.User{},
+		&models.Book{},
+	)
 
 	// Register Routes
 	routes.AuthRoutes(app)
 	routes.UserRoutes(app)
+	routes.BookRoutes(app)
 
 	// Start server
 	app.Listen(":3000")
