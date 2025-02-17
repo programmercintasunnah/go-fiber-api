@@ -9,7 +9,7 @@ import (
 )
 
 func GetAllBooks(c *fiber.Ctx) error {
-	books, err := repositories.GetBooks()
+	books, err := repositories.BookRepository.GetAll()
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to retrieve books"})
 	}
@@ -18,7 +18,7 @@ func GetAllBooks(c *fiber.Ctx) error {
 
 func GetBookByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	book, err := repositories.GetBookByID(id)
+	book, err := repositories.BookRepository.GetByID(id)
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Book not found"})
 	}
@@ -31,7 +31,7 @@ func CreateBook(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
 	}
 
-	if err := repositories.CreateBook(&book); err != nil {
+	if err := repositories.BookRepository.Create(&book); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create book"})
 	}
 
@@ -45,7 +45,7 @@ func UpdateBook(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
 	}
 
-	if err := repositories.UpdateBook(id, &book); err != nil {
+	if err := repositories.BookRepository.Update(id, &book); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to update book"})
 	}
 
@@ -54,7 +54,7 @@ func UpdateBook(c *fiber.Ctx) error {
 
 func DeleteBook(c *fiber.Ctx) error {
 	id := c.Params("id")
-	if err := repositories.DeleteBook(id); err != nil {
+	if err := repositories.BookRepository.Delete(id); err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete book"})
 	}
 
@@ -62,19 +62,16 @@ func DeleteBook(c *fiber.Ctx) error {
 }
 
 func SearchBooks(c *fiber.Ctx) error {
-	// Parse request body sesuai dengan struktur yang Anda inginkan
 	var params utils.SearchParams
 	if err := c.BodyParser(&params); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
 	}
 
-	// Panggil fungsi repository untuk mencari buku
-	books, total, err := repositories.SearchBooks(params)
+	books, total, err := repositories.BookRepository.Search(params)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to search books"})
 	}
 
-	// Format response dengan metadata pagination
 	response := fiber.Map{
 		"data":       books,
 		"total":      total,

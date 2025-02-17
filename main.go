@@ -16,6 +16,7 @@ package main
 
 import (
 	database "go-fiber-api/db"
+	"go-fiber-api/repositories"
 	"go-fiber-api/routes"
 
 	"log"
@@ -32,14 +33,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// Connect database
+	database.ConnectDB()
+	repositories.InitRepositories()
+
 	app := fiber.New()
 
 	// Middleware untuk CORS & Recover
 	app.Use(cors.New())    // Izinkan akses API dari domain berbeda
 	app.Use(recover.New()) // Tangani panic agar server tidak crash
-
-	// Connect database
-	database.ConnectDB()
 
 	// Register Routes
 	routes.AuthRoutes(app)
