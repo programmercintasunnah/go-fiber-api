@@ -40,11 +40,6 @@ func main() {
 
 	// Connect database
 	database.ConnectDB()
-	// database.DB.AutoMigrate( // hapus, karna sudah pake dbmate
-	// 	&models.User{},
-	// 	&models.Book{},
-	// 	&models.Iktikaf{},
-	// )
 
 	// Register Routes
 	routes.AuthRoutes(app)
