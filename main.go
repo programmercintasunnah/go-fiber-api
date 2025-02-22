@@ -15,27 +15,25 @@ package main
 // │   ├── limiter.go
 
 import (
+	"fmt"
 	database "go-fiber-api/db"
 	"go-fiber-api/repositories"
 	"go-fiber-api/routes"
 
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	// Initialize the database
+	database.Init()
+	if database.DB == nil {
+		panic("Database connection failed")
 	}
-
-	// Connect database
-	database.ConnectDB()
-	repositories.InitRepositories()
+	fmt.Println("Database initialized successfully")
+	// Initialize repositories after DB initialization
+	repositories.Init() // Panggil fungsi init() untuk repositories jika diperlukan
 
 	app := fiber.New()
 
